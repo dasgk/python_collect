@@ -18,7 +18,7 @@ import os
 import codecs
 
 url = "https://pc-shop.xiaoe-tech.com/appgp6EDV1w6936/open/video.detail.get/1.0"
-
+'''
 resource_ids = ["v_5a98b07dc7dda_ll3Y48cv","v_5a98b0ceb552b_NgHEVX5S","v_5a98b5599238b_ecrTncxX"]
 names = ["1-Python介绍（一）","2-Python介绍（二）","3-变量—命名规范"]
 
@@ -71,6 +71,7 @@ names = ["22函数1","23函数2","24函数3","25函数4","26类 1","27类2"]
 
 resource_ids = ["v_5a98c9857e211_tnKG68Qk"]
 names = ["28类3"]
+'''
 #data = dict(data=dict(resource_id="v_5a98b07dc7dda_ll3Y48cv"))
 
 request_m3u8_url_headers = {
@@ -83,7 +84,7 @@ request_m3u8_url_headers = {
 "Content-Type":"application/x-www-form-urlencoded",
 "Host":"pc-shop.xiaoe-tech.com",
 "Origin":"http://pc-shop.xiaoe-tech.com",
-"Cookie":"laravel_session=eyJpdiI6ImVYbnh6VzVDR29kS29TYzVYOHRIXC9BPT0iLCJ2YWx1ZSI6IkdVTlhpa3pNUkRmaUxGVGwxT0RTUXo2TXdxdk5UNkpyNWprbkxvc1BSSWl2N0lmblQ5VFNYZkpNNFNpS0M1elFBTlNST2g3OHY3bWpjSndLbEhmUnd3PT0iLCJtYWMiOiI0MThlYjQ0MmM4ZjM5ZjVkYmY1YWFlMWNkNjQ1NzIzMGRlNjIwNGMwMTdiZjA4NTI4NTVlZWNjN2EzMTRmMjNiIn0%3D; tgw_l7_route=4ed04efd1969357f144e2696012a8c35",
+"Cookie":"tgw_l7_route=4ed04efd1969357f144e2696012a8c35; laravel_session=eyJpdiI6IlpmR3FJblZpMlU1T0tNelpIRktEUmc9PSIsInZhbHVlIjoiWnBReGZKZ2w0ZkFxbHcxcXlXcFA2N2w3aEJoK2tFYnZDOGo3TVNSVmxRUDZNS1ZTSmdmSGtCVWIyTXgwZTFaM1Z4cDQ1V2FwdE1Xb3V5eEJkYnEreFE9PSIsIm1hYyI6IjdmNDJmOTllMDg2OTIyZTlmZWE5NzgxMWFkM2ZiMjExYjgwYzRhMDFmZGYwOWI2NzRkM2Y4NzhmYjkzODEwOTYifQ%3D%3D",
 "Pragma":"no-cache",
 "Referer":"http://pc-shop.xiaoe-tech.com/appgp6EDV1w6936/video_details?id=v_5a9fb7291b264_wnQueZNO",
 "User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
@@ -264,4 +265,4 @@ def handle():
 	print( title+"处理完成")
 	time.sleep(10)
     #开始合成新的m3u8文件
-handle()
+#handle()
