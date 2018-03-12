@@ -165,7 +165,8 @@ def download_all_files(resource_id, title):
         print("第" + str(file_index) + "个文件下载完成")
         file_index = file_index+1
 
-def make_new_m3u8(resource_id, title):
+
+def make_new_m3u8_without_decrpy(title):
     file_name = title + "/key.m3u8"
     content = get_m3u8_content(file_name)
     prefix_path = ''
@@ -173,35 +174,43 @@ def make_new_m3u8(resource_id, title):
     row_list = content.split('\n')
     new_content = []
     index_index = 0
-
     for row_content in row_list:
         if row_index >= 5:
             if (row_index - 5) % 3 == 0:
-                #需要替换URI的值
+                # 需要替换URI的值
                 begin_position = row_content.find("URI=\"")
                 if begin_position == -1:
                     break;
                 begin_position = begin_position + len("URI=\"")
                 end_position = row_content.find("\"", begin_position)
                 new_url = row_content[begin_position:end_position]
-                row_content = row_content.replace(new_url,str(index_index)+".key" )
+                row_content = row_content.replace(new_url, str(index_index) + ".key")
                 new_content.append(row_content)
             else:
-                if (row_index-7)%3 == 0:
+                if (row_index - 7) % 3 == 0:
                     # 需要替换的ts文件路劲
-                    new_content.append(str(index_index)+".ts")
-                    index_index = index_index+1
+                    new_content.append(str(index_index) + ".ts")
+                    index_index = index_index + 1
                 else:
                     new_content.append(row_content)
         else:
-
             new_content.append(row_content)
-        row_index = row_index + 1
+    row_index = row_index + 1
     # 开始进行文件写入
-    with open(file_name+"_new", 'w') as f:
+    with open(file_name + "_new", 'w') as f:
         for item in new_content:
             f.write(item)
             f.write("\n")
+
+def make_new_m3u8_with_decrpy(title):
+
+def make_new_m3u8(resource_id, title, is_decrpy=false):
+    if not is_decrpy:
+        make_new_m3u8_without_decrpy(title)
+    else:
+        make_new_m3u8_with_decrpy(title)
+
+
 
 def handle():
     #开始下载各种文件包括m3u8, ts文件，还有key文件
