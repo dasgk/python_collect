@@ -2,6 +2,7 @@
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+import os
 import requests
 import json
 import wangjun
@@ -30,9 +31,12 @@ for data in json_data:
     print("正在处理"+ data['title'])
     resource_id = data['id']
     title = data['title']
+    if os.path.exists(title):
+        if os.path.exists( title + "/key.m3u8_new"):
+            continue
     wangjun.download_all_files(resource_id, title)
-    make_new_m3u8(resource_id,title)
-    print( title+"处理完成")
-    time.sleep(10)
+    wangjun.make_new_m3u8(resource_id,title)
+    print(title+"处理完成")
+    time.sleep(100)
 
 

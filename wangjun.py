@@ -18,60 +18,7 @@ import os
 import codecs
 
 url = "https://pc-shop.xiaoe-tech.com/appgp6EDV1w6936/open/video.detail.get/1.0"
-'''
-resource_ids = ["v_5a98b07dc7dda_ll3Y48cv","v_5a98b0ceb552b_NgHEVX5S","v_5a98b5599238b_ecrTncxX"]
-names = ["1-Python介绍（一）","2-Python介绍（二）","3-变量—命名规范"]
 
-
-
-resource_ids = ["v_5a98b71c5176d_4SWkwWIj","v_5a98b75ac4f8e_TlJAu1jv","v_5a98b8f2d1cd6_l6PD7hKE"]
-names = ["5-变量类型-数值类型","6-变量类型-bool类型", "7-变量类型-字符串类型"]
-
-
-resource_ids = ["v_5a98c21a93cb1_NMyVtmSp"]
-names = ["8-课间答疑"]
-
-
-
-resource_ids = ["v_5a98c25e50e8a_3TZ5BU0s"]
-names =["9-变量类型-字符串类型(2)"]
-
-
-resource_ids =[ "v_5a98c28eb5e03_FA6Ru2Yb"]
-names=[ "10-变量类型-字符串类型(3)"]
-
-resource_ids = ["v_5a98b68c44f26_pYazJr5T"]
-names = ["4-变量-代码规范"]
-
-resource_ids = ["v_5a98c2bae65ad_XOxnXK9T", "v_5a98c2e731ae0_PmncsPb3"]
-names = ["11-变量-列表类型","12-变量-列表类型2"]
-
-
-resource_ids = ["v_5a98c3a148e43_6PHVUZEn", "v_5a98c3f82a25a_iy8kp0xt"]
-names = ["13-变量-列表类型3","14变量类型—语言组类型字典类型"]
-
-resource_ids = [ "v_5a98c41fb1efc_W5JeH1e4"]
-names = ["15 变量类型—字典类型2"]
-
-
-resource_ids = ["v_5a98c5342e270_lZ75ZFvZ","v_5a98c55b6ce30_mYM5oYY4","v_5a98c58e97612_QkqiLPQr","v_5a98c5b7f151f_jVrYlPek","v_5a98c6078f4d3_K4wxovX3","v_5a98c66e470f4_u12Q6MYr"]
-names = ["16条件判断","17条件判断2","18循环1","19循环2","20循环3","21循环4"]
-
-resource_ids = ["v_5a98c5b7f151f_jVrYlPek","v_5a98c6078f4d3_K4wxovX3","v_5a98c66e470f4_u12Q6MYr"]
-names = ["19循环2","20循环3","21循环4"]
-
-
-resource_ids = ["v_5a98c66e470f4_u12Q6MYr"]
-names = ["21循环4"]
-
-
-resource_ids = ["v_5a98c6972e709_FfGv7oi4","v_5a98c7baef2a3_5m8h7b9m","v_5a98c885c9ac3_QxPUHZv3","v_5a98c8bea5289_ltqZFx9t","v_5a9fb7291b264_wnQueZNO","v_5a99236e666c5_ABOm2AKl"]
-names = ["22函数1","23函数2","24函数3","25函数4","26类 1","27类2"]
-
-
-resource_ids = ["v_5a98c9857e211_tnKG68Qk"]
-names = ["28类3"]
-'''
 #data = dict(data=dict(resource_id="v_5a98b07dc7dda_ll3Y48cv"))
 
 request_m3u8_url_headers = {
@@ -195,7 +142,7 @@ def download_all_files(resource_id, title):
     r = requests.get(hls_url, headers= download_m3u8_url_header)
     #创建需要的目录
     if not os.path.exists(title):
-	os.makedirs(title)
+        os.makedirs(title)
     file_name = title+"/key.m3u8"
     with open(file_name, "wb") as code:
         code.write(r.content)
@@ -259,10 +206,10 @@ def make_new_m3u8(resource_id, title):
 def handle():
     #开始下载各种文件包括m3u8, ts文件，还有key文件
     for resource_id,title in zip(resource_ids,names):
-	print("正在处理"+ title)
-	download_all_files(resource_id,title)
-	make_new_m3u8(resource_id,title)
-	print( title+"处理完成")
-	time.sleep(10)
+	    print("正在处理"+ title)
+	    download_all_files(resource_id,title)
+	    make_new_m3u8(resource_id,title)
+	    print( title+"处理完成")
+	    time.sleep(10)
     #开始合成新的m3u8文件
 #handle()
