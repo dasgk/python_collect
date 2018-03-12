@@ -31,12 +31,22 @@ for data in json_data:
     print("正在处理"+ data['title'])
     resource_id = data['id']
     title = data['title']
+    '''
     if os.path.exists(title):
         if os.path.exists( title + "/key.m3u8_new"):
             continue
+    '''
+    #思路
+    '''
+    hexdump -v -e '16/1 "%02x"' 0.key
+    printf '%032x' 0
+    openssl aes-128-cbc -d -in 0.ts -out media_decryptd_0.ts -nosalt -iv 00000000000000000000000000000000 -K 00d245e1f48aec2d7802e3514fa7fbfb
+    '''
     wangjun.download_all_files(resource_id, title)
     wangjun.make_new_m3u8(resource_id,title)
     print(title+"处理完成")
     time.sleep(100)
+    break
+
 
 
