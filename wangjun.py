@@ -3,12 +3,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 # http://pc-shop.xiaoe-tech.com/appgp6EDV1w6936/video_details?id=v_5a9fb7291b264_wnQueZNO
-# 上述链接的视频流下载，分两步操作，
-# #第一步获得id值，
 # 根据id值获得m3u8文件
 # 解析m3u8文件获得ts链接数组
 # 下载ts文件
-# 用别的程序进行合成
+# 下载后的ts文件是加密的，需要根据key进行解密
+# 使用ffmpeg将所有解密后的文件进行合成mp4文件
+# 将mp4文件移动到指定路径
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -100,9 +100,13 @@ def get_key_list(content, title):
                 begin_position = begin_position+len("URI=\"")
                 end_position = per_row.find("\"", begin_position)
                 new_url = per_row[begin_position:end_position]
-                r = requests.get(new_url)
-                with open(title+"/"+str(key_index)+".key", "wb") as code:
-                    code.write(r.content)
+                #不存在key才下载
+                if not os.path.exists(title+"/"+str(key_index)+".key"):
+                    #也不存在解密后的key文件
+                    if not os.path.exists(title+"/media_decryptd_"+str(key_index)+".ts"):
+                        r = requests.get(new_url)
+                        with open(title+"/"+str(key_index)+".key", "wb") as code:
+                            code.write(r.content)
                 key_index = key_index+1
         row_index = row_index + 1
     return key_list
@@ -122,7 +126,6 @@ def get_m3u8_content(filename):
     fd = codecs.open(filename)
     content = fd.read()
     fd.close()
-
     return content
 
 #获得ts文件下载地址前缀
@@ -137,15 +140,15 @@ def download_all_files(resource_id, title):
     if not hls_url:
         return
     print("m3u8 link：" + hls_url)
-    #实例化ts文件下载地址前缀
-    print("开始下载m3u8文件")
-    r = requests.get(hls_url, headers= download_m3u8_url_header)
     #创建需要的目录
     if not os.path.exists(title):
         os.makedirs(title)
     file_name = title+"/key.m3u8"
-    with open(file_name, "wb") as code:
-        code.write(r.content)
+    if not os.path.exists(file_name):
+        print("开始下载m3u8文件")
+        r = requests.get(hls_url, headers=download_m3u8_url_header)
+        with open(file_name, "wb") as code:
+            code.write(r.content)
     print("m3u8文件下载成功")
     content = get_m3u8_content(file_name)
     print("开始写入key文件")
@@ -158,67 +161,56 @@ def download_all_files(resource_id, title):
     file_index = 0
     for item in ts_list:
         ts_download_url = ts_url_prefix+item
-        r = requests.get(ts_download_url, headers=download_ts_header)
-        print("正在下载第"+str(file_index)+"个文件")
-        with open(title+"/"+str(file_index)+".ts", "wb") as code:
-            code.write(r.content)
-        print("第" + str(file_index) + "个文件下载完成")
+        #不存在加密后的ts文件才进行下载
+        if not os.path.exists(title+"/"+str(file_index)+".ts"):
+            #也不存在解密后的ts文件才进行下载
+            if not os.path.exists(title+"/media_decryptd_"+str(file_index)+".ts"):
+                r = requests.get(ts_download_url, headers=download_ts_header)
+                print("正在下载第"+str(file_index)+"个文件")
+                with open(title+"/"+str(file_index)+".ts", "wb") as code:
+                    code.write(r.content)
+        #print("第" + str(file_index) + "个文件下载完成")
         file_index = file_index+1
+    #将ts文件进行解密，合成mp4文件
+    get_new_ts_list(title, len(ts_list))
 
+def get_new_ts_list(title,length):
 
-def make_new_m3u8_without_decrpy(title):
-    file_name = title + "/key.m3u8"
-    content = get_m3u8_content(file_name)
-    prefix_path = ''
-    row_index = 1
-    row_list = content.split('\n')
-    new_content = []
-    index_index = 0
-    for row_content in row_list:
-        if row_index >= 5:
-            if (row_index - 5) % 3 == 0:
-                # 需要替换URI的值
-                begin_position = row_content.find("URI=\"")
-                if begin_position == -1:
-                    break;
-                begin_position = begin_position + len("URI=\"")
-                end_position = row_content.find("\"", begin_position)
-                new_url = row_content[begin_position:end_position]
-                row_content = row_content.replace(new_url, str(index_index) + ".key")
-                new_content.append(row_content)
-            else:
-                if (row_index - 7) % 3 == 0:
-                    # 需要替换的ts文件路劲
-                    new_content.append(str(index_index) + ".ts")
-                    index_index = index_index + 1
-                else:
-                    new_content.append(row_content)
-        else:
-            new_content.append(row_content)
-    row_index = row_index + 1
-    # 开始进行文件写入
-    with open(file_name + "_new", 'w') as f:
-        for item in new_content:
-            f.write(item)
-            f.write("\n")
+    title_1 = title.replace(" ","\ ")
+    cd_command = "cd " + title_1
+    file_name = title.replace(" ", "")
+    #删除该目录下所有的mp4文件
+    os.popen(cd_command+" && rm -rf *.mp4")
+    # 如果文件存在，则不进行操作
+        if os.path.exists(file_name + ".mp4"):
+            return
+    ffmpeg_command = cd_command + " && "
+    ffmpeg_command += " ffmpeg -i \"concat:"
+    num_list = range(length)
+    for index in num_list:
+        #如果存在解密后的ts文件则本次不执行
+        if not os.path.exists(title+"/media_decryptd_"+str(index)+".ts"):
+            str_dump = cd_command+" && "+ "hexdump -v -e  '16/1 \"%02x\"' "
+            str_dump = str_dump +str(index)+".key"
+            decrpy_data = os.popen(str_dump).readline()
+            openss_command = cd_command+" && "+"openssl aes-128-cbc -d -in "+str(index)+".ts -out "+"media_decryptd_"\
+                         +str(index)+".ts -nosalt -iv 00000000000000000000000000000000 -K "+str(decrpy_data)
+            os.popen(openss_command)
+        #说明对应的key文件已经存在,进行删除
+        os.popen(cd_command + " && rm -rf " + str(index) + ".key")
+        #加密后的ts文件也可以删除
+        os.popen(cd_command+" && rm -rf "+str(index)+".ts")
+        #调用ffmpeg进行视频的生成
+        ffmpeg_command += "media_decryptd_"+str(index)+".ts|"
+    ffmpeg_command = ffmpeg_command[0:len(ffmpeg_command)-1]
+    ffmpeg_command += "\""
 
-def make_new_m3u8_with_decrpy(title):
-
-def make_new_m3u8(resource_id, title, is_decrpy=false):
-    if not is_decrpy:
-        make_new_m3u8_without_decrpy(title)
-    else:
-        make_new_m3u8_with_decrpy(title)
-
-
-
-def handle():
-    #开始下载各种文件包括m3u8, ts文件，还有key文件
-    for resource_id,title in zip(resource_ids,names):
-	    print("正在处理"+ title)
-	    download_all_files(resource_id,title)
-	    make_new_m3u8(resource_id,title)
-	    print( title+"处理完成")
-	    time.sleep(10)
-    #开始合成新的m3u8文件
-#handle()
+    ffmpeg_command = ffmpeg_command+" -c copy -bsf:a aac_adtstoasc ../"+file_name+".mp4"
+    print(ffmpeg_command)
+    os.popen(ffmpeg_command)
+    #删除解密后的ts文件，还是手动删除吧，部分视频可能第一次合成失败
+    '''
+    for index in num_list:
+        if os.path.exists(title+"/media_decryptd_"+str(index)+".ts"):
+            os.remove(title+"/media_decryptd_"+str(index)+".ts")
+    '''
