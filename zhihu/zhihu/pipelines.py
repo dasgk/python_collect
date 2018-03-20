@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: gbk -*-
 
 # Define your item pipelines here
 #
@@ -10,7 +10,11 @@ class PeoplePipeline(object):
     def process_item(self, item, spider):
         with open("my_meiju.txt", 'a') as fp:
             for single_item in item:
-                fp.write(single_item + ":" + str(item[single_item])+"\t")
+                gb18030TypeStr = single_item.encode("GBK", 'ignore')
+                gb18030TypeStr = gb18030TypeStr.decode("GBK")
+                value = str(item[single_item]).encode("GBK", 'ignore')
+                value = value.decode("GBK")
+                fp.write(str(gb18030TypeStr) + ":" + str(value)+"\t")
             fp.write("\r\n")
 
 
