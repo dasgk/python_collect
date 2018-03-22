@@ -19,14 +19,14 @@ for title in titles:
     draw.text((width/2, height/2), title, fill=fillcolor, font=ttfont)
     rand_rotate = random.randint(0,360)
     bk_im = bk_im.rotate(rand_rotate)
-    center_left = width/2-10
-    center_top = height / 2 - 10
+    center_left = width/2
+    center_top = height / 2
     current_step = step*(int(weight[key]))
     box = (center_left-current_step,center_top-current_step,center_left+current_step,current_step+center_top)
     # 可以粘贴在目标文件上的图片块
     select_im = bk_im.crop(box)
-    rand_left = random.randint(0,width)
-    rand_top = random.randint(0, height)
+    rand_left = random.randint(0,width/2)
+    rand_top = random.randint(0, height/2)
     #将裁剪出的图片放在目标文件的随机位置上即可
     base_im = base_img.paste(select_im,(rand_left, rand_top,rand_left+2*current_step, rand_top+2*current_step))
     base_img.save("content.png")
