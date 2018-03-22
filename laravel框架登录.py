@@ -35,7 +35,7 @@ def get_capatch(value_list):
     captcha = input("请输入你的验证>")
     return captcha
 
-def handle():
+def handle(username, password):
     value_list = ['',''];
     value_list[0] = '';
     value_list[1] = '';
@@ -45,8 +45,8 @@ def handle():
               'Cookie':value_list[0]
            },data={
                 "_token": value_list[1],
-                "username": 'admin',
-                'password': '111111',
+                "username": username,
+                'password': password,
                 'captcha': captcha
             })
     soup = BeautifulSoup(response.text, 'lxml')
@@ -58,5 +58,5 @@ def handle():
         if span.strong.text == '用户名或密码错误':
             return
         else:
-            handle()
-handle()
+            handle(username, password)
+handle('admin', '111111')
