@@ -47,7 +47,7 @@ class ZhihuScrapySpider(scrapy.Spider):
                               callback=self.parse_user)
 
         # 这里判断page是否存在并且判断page里的参数is_end判断是否为False，如果为False表示不是最后一页，否则则是最后一页
-        if 'page' in results.keys() and results.get('is_end') == False:
+        if 'page' in results.keys() and results.get('is_end') is False:
             next_page = results.get('paging').get("next")
             # 获取下一页的地址然后通过yield继续返回Request请求，继续请求自己再次获取下页中的信息
             yield Request(next_page, self.parse_follows)
