@@ -30,8 +30,7 @@ for title in titles:
     #将裁剪出的图片放在目标文件的随机位置上即可
     base_im = base_img.paste(select_im,(rand_left, rand_top,rand_left+2*current_step, rand_top+2*current_step))
     base_img.save("content.png")
-
     key = key+1
 base_img = Image.open("content.png")
-base_img.show();
+base_img.show()
 base_img.close()

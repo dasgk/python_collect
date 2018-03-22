@@ -35,7 +35,7 @@ def get_capatch(value_list):
     captcha = input("请输入你的验证>")
     return captcha
 
-def handle(username, password):
+def handle(username, password, count):
     value_list = ['',''];
     value_list[0] = '';
     value_list[1] = '';
@@ -54,9 +54,18 @@ def handle(username, password):
     if span is None:
         print('登录成功')
     else:
-        print(span.strong.text)
+        print(password+ "尝试"+span.strong.text)
         if span.strong.text == '用户名或密码错误':
             return
         else:
-            handle(username, password)
-handle('admin', '111111')
+            count = count+1;
+            if count>= per_password_max_count:
+                print(password+"已达最大尝试次数，继续下一个密码")
+                return
+            else:
+                handle(username, password, count)
+passwords = ['111111','1111112']
+per_password_max_count = 3
+for password in passwords:
+    count = 0
+    handle('admin', password, count)
