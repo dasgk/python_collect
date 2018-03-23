@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for zhihu project
+# Scrapy settings for test_scrapy project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'zhihu'
+BOT_NAME = 'test_scrapy'
 
-SPIDER_MODULES = ['zhihu.spiders']
-NEWSPIDER_MODULE = 'zhihu.spiders'
+SPIDER_MODULES = ['test_scrapy.spiders']
+NEWSPIDER_MODULE = 'test_scrapy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'zhihu (+http://www.yourdomain.com)'
+#USER_AGENT = 'test_scrapy (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -39,28 +39,21 @@ ROBOTSTXT_OBEY = True
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-DEFAULT_REQUEST_HEADERS = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'en',
-    'user-agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 ',
-    ':authority':'www.zhihu.com',
-    ':method':'GET',
-    ':path':'/api/v4/members/zhang-yi-90-96/followers?include=data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics&offset=0&limit=20',
-    ':scheme':'https',
-    'referer':'https://www.zhihu.com/people/zhang-yi-90-96/followers',
-    'authorization':'Bearer 2|1:0|10:1521510835|4:z_c0|92:Mi4xTDVZN0FnQUFBQUFBY095eXdGcFFEU1lBQUFCZ0FsVk5zN2VkV3dEbTVUY3lZTHE0ODRFaEFZSnBpQXJucnBuY2VR|0912e7bb73a2d4c0bff4a8b460e0a0612a2c2e35a0f5326403740bf1dfc20864'
-}
+#DEFAULT_REQUEST_HEADERS = {
+#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+#   'Accept-Language': 'en',
+#}
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'zhihu.middlewares.ZhihuSpiderMiddleware': 543,
+#    'test_scrapy.middlewares.TestScrapySpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'zhihu.middlewares.ZhihuDownloaderMiddleware': 543,
+#    'test_scrapy.middlewares.TestScrapyDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -72,7 +65,7 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'zhihu.pipelines.PeoplePipeline': 300,
+    'test_scrapy.pipelines.TestScrapyPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

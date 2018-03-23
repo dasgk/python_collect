@@ -7,9 +7,12 @@
 
 import scrapy
 
-class PeopleItem(scrapy.Item):
+
+class TestScrapyItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    name = scrapy.Field()
-    headline = scrapy.Field()
+    title = scrapy.Field()
+    author = scrapy.Field()
+    course_desc = scrapy.Field()
+    price = scrapy.Field()
+    for_people = scrapy.Field()
     pass
